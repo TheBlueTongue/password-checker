@@ -58,9 +58,16 @@ def open_main_window():
 
             password_special_char_text.text = 'Special Characters:'
             if special_char_score == 0:
-                password_special_char_feedback 
+                password_special_char_feedback.text = 'Weak'
+            elif special_char_score == 50: 
+                password_special_char_feedback.text = 'Moderate'
+            elif special_char_score == 100 or special_char_score > 100:
+                password_special_char_feedback.text = 'Strong'
+                special_char_score = 100
         else: 
-            password_special_char_feedback = ''
+            password_special_char_feedback.text = ''
+
+        return special_char_score
         
 
     def check_common_passwords():
