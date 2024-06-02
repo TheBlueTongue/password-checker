@@ -69,15 +69,31 @@ def open_main_window():
 
         return special_char_score
         
-
     def check_common_passwords():
         pass
 
-    def check_numbers():
+    def check_numbers(password, password_number_feedback, password_number_text):
+        numbers_score = 0
 
+        if len(password) > 0:
+            numbers = "1234567890"
+            for char in password:
+                if char in numbers:
+                    numbers_score += 50
+            
+            password_number_text.text = 'Numbers:'
+            if numbers_score == 0:
+                password_number_feedback.text = 'Weak'
+            elif numbers_score == 50: 
+                password_number_feedback.text = 'Moderate'
+            elif numbers_score == 100 or numbers_score > 100:
+                password_number_feedback.text = 'Strong'
+                numbers_score = 100
+        else:
+            password_number_feedback.text = ''
+
+        return numbers_score
     
-        pass
-        
     def check_dictionary_words():
 
         pass 
@@ -86,25 +102,29 @@ def open_main_window():
         pass
 
     def help_btn(event):
+
         pass
 
+    def back_btn(event):
+        open_main_window
+
     def abt_btn(event):
+        
+        about_button.configure(text="Back",command=back_btn(event))
         input_password.destroy()
         password_prompt.destroy()
         check.destroy()
         password_feedback_length.destroy()
-        password_length_text = gp.Label(app, '')
-        password_case_feedback = gp.StyleLabel(app, '')
-        password_case_text = gp.Label(app, '')
-        password_special_char_text = gp.Label(app, '')
-        password_special_char_feedback = gp.Label(app, '')
-        help_button = gp.Button(app, 'Help', help_btn)
-        about_button = gp.Button(app, 'About', abt_btn)
-        copy_password_button = gp.Button(app, 'Copy', copy_btn)
-        pass
+        password_length_text.destroy()
+        password_case_feedback.destroy()
+        password_case_text.destroy()
+        password_special_char_text.destroy()
+        password_special_char_feedback.destroy()
+
     def copy_btn(event):
 
         pass
+
     def check_btn(event):
         input_password.toggle()
 
@@ -115,6 +135,7 @@ def open_main_window():
         l = check_length(password, password_feedback_length, password_length_text)
         upper_case_score = check_case(password, password_case_feedback, password_case_text)
         special_char_score = check_special_char(password, password_special_char_feedback, password_special_char_text)
+        numbers_score = check_numbers(password, password_number_feedback, password_number_text)
 
     start_btn.destroy()
     start_lbl.destroy()
@@ -127,12 +148,16 @@ def open_main_window():
     input_password.add_event_listener('change', on_password_change)
     password_prompt = gp.Label(app, 'Enter Password:')
     check = gp.Button(app, 'Show Password', check_btn)
+
     password_feedback_length = gp.Label(app, '')
     password_length_text = gp.Label(app, '')
     password_case_feedback = gp.StyleLabel(app, '')
     password_case_text = gp.Label(app, '')
     password_special_char_text = gp.Label(app, '')
     password_special_char_feedback = gp.Label(app, '')
+    password_number_feedback = gp.Label(app, '')
+    password_number_text = gp.Label(app, '')
+
     help_button = gp.Button(app, 'Help', help_btn)
     about_button = gp.Button(app, 'About', abt_btn)
     copy_password_button = gp.Button(app, 'Copy', copy_btn)
@@ -149,6 +174,8 @@ def open_main_window():
     app.add(password_case_feedback, 3, 2)
     app.add(password_special_char_text, 4, 1)
     app.add(password_special_char_feedback, 4, 2)
+    app.add(password_number_feedback, 5, 2)
+    app.add(password_number_text, 5, 1)
 
 def welcome_txt():
     welcome_text.font_name = "aharoni"
