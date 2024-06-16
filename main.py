@@ -1,7 +1,7 @@
 import gooeypie as gp
 import time
 
-password = ''
+
 
 def load_common_passwords(filename):
    with open(filename, 'r') as file:
@@ -176,7 +176,7 @@ def open_main_window(password):
                 y = 'Impossibly Strong'
 
             overall_score_feedback.text = f'{x}%        ({y})'
-
+            strength_bar.value = x
         else:
             overall_score_feedback.text = 'Type a password :)'
 
@@ -320,23 +320,23 @@ def open_main_window(password):
     password_dictionary_word_feedback = gp.Label(app, '')
     overall_score_text = gp.Label(app, '')
     overall_score_feedback = gp.Label(app, '')
-    progress_bar = gp.StyleLabel(app, '')
+    strength_bar = gp.Progressbar(app)
     
     detailed_feedback = gp.Button(app, 'Feedback', feedback_btn)
     help_button = gp.Button(app, 'Help', help_btn)
     about_button = gp.Button(app, 'About', abt_btn)
     copy_password_button = gp.Button(app, 'Copy', copy_btn)
 
-    app.add(progress_bar, 3, 2)
-    app.add(password_prompt, 1, 1, align='right')
+    app.add(strength_bar, 3, 1, column_span = 3, fill=True)
+    app.add(password_prompt, 1, 1)
     app.add(input_password, 1, 2)
     app.add(check, 1, 3)
-    app.add(copy_password_button, 4, 1, align='center')
-    app.add(about_button, 4, 3, align='center')
-    app.add(help_button, 4, 2, align='center')
+    app.add(copy_password_button, 4, 1)
+    app.add(about_button, 4, 3)
+    app.add(help_button, 4, 2)
     app.add(overall_score_text, 2, 1)
     app.add(overall_score_feedback, 2, 2)
-    app.add(detailed_feedback, 2, 3, align='center')
+    app.add(detailed_feedback, 2, 3)
 
 def start_button(event):
     start_lbl.text = 'Loading Assets'
