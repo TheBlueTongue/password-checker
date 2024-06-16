@@ -1,6 +1,7 @@
 import gooeypie as gp
 import time
 
+password = ''
 
 def load_common_passwords(filename):
    with open(filename, 'r') as file:
@@ -16,10 +17,9 @@ def load_dictionary_words(filename):
 
 dictionary_words = load_dictionary_words('words.txt')
 
+password = ''
 
-def open_main_window():    
-    # back_button = gp.Button(app, 'Back', back_btn)
-    # back_button.destroy()
+def open_main_window(password):    
 
     def check_length(password, password_feedback_length, password_length_text):
         length_score = 0
@@ -141,7 +141,9 @@ def open_main_window():
                 else:
                     password_dictionary_word_feedback.text = 'No' 
                     dictionary_score = 100
-
+        else: 
+            password_dictionary_word_text.text = ''
+        
         return dictionary_score
         
     def overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, password):
@@ -238,6 +240,8 @@ def open_main_window():
         dictionary_sore = check_dictionary_words(password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words)
         overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, password)
         print (length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore)
+
+        return password
     
     def feedback_btn(event):
         
@@ -252,7 +256,8 @@ def open_main_window():
             password_number_text.destroy()
             password_special_char_feedback.destroy()
             password_special_char_text.destroy()
-            
+            common_password_feedback.destroy()
+            common_password_text.destroy()
 
 
             back_button.destroy()
@@ -292,9 +297,11 @@ def open_main_window():
     welcome_text.destroy()
     thinking_pb.destroy()
     app.grid_remove()
-    app.set_grid(3, 3)
+    app.set_grid(4, 3)
 
     input_password = gp.Secret(app)
+    input_password.text = password
+
     input_password.add_event_listener('change', on_password_change)
     password_prompt = gp.Label(app, 'Enter Password:')
     check = gp.Button(app, 'Show Password', check_btn)
@@ -313,41 +320,23 @@ def open_main_window():
     password_dictionary_word_feedback = gp.Label(app, '')
     overall_score_text = gp.Label(app, '')
     overall_score_feedback = gp.Label(app, '')
-
+    progress_bar = gp.StyleLabel(app, '')
     
     detailed_feedback = gp.Button(app, 'Feedback', feedback_btn)
     help_button = gp.Button(app, 'Help', help_btn)
     about_button = gp.Button(app, 'About', abt_btn)
     copy_password_button = gp.Button(app, 'Copy', copy_btn)
 
+    app.add(progress_bar, 3, 2)
     app.add(password_prompt, 1, 1, align='right')
     app.add(input_password, 1, 2)
     app.add(check, 1, 3)
-    app.add(copy_password_button, 3, 1, align='center')
-    app.add(about_button, 3, 3, align='center')
-    app.add(help_button, 3, 2, align='center')
+    app.add(copy_password_button, 4, 1, align='center')
+    app.add(about_button, 4, 3, align='center')
+    app.add(help_button, 4, 2, align='center')
     app.add(overall_score_text, 2, 1)
     app.add(overall_score_feedback, 2, 2)
     app.add(detailed_feedback, 2, 3, align='center')
-
-
-
-    # app.add(password_feedback_length, 2, 2, columnspan = 2)
-    # app.add(password_length_text, 2, 1)
-    # app.add(password_case_text, 3, 1)
-    # app.add(password_case_feedback, 3, 2)
-    # app.add(password_special_char_text, 4, 1)
-    # app.add(password_special_char_feedback, 4, 2)
-    # app.add(password_number_feedback, 5, 2)
-    # app.add(password_number_text, 5, 1)
-    # app.add(common_password_feedback, 6, 2)
-    # app.add(common_password_text, 6, 1)
-    # app.add(password_dictionary_word_feedback, 7, 2)
-    # app.add(password_dictionary_word_text, 7, 1)
-
-def welcome_txt():
-    welcome_text.font_name = "aharoni"
-    welcome_text.text = 'Robustness-Security'
 
 def start_button(event):
     start_lbl.text = 'Loading Assets'
@@ -358,7 +347,7 @@ def start_button(event):
         app.refresh()
         time.sleep(0.02)
 
-    open_main_window()
+    open_main_window(password)
 
 app = gp.GooeyPieApp('Robustness Security')
 app.width = 450
@@ -369,7 +358,9 @@ start_lbl = gp.Label(app, '')
 welcome_text = gp.StyleLabel(app, '')
 thinking_pb = gp.Progressbar(app)
 
-welcome_txt()
+welcome_text.font_name = "aharoni"
+welcome_text.text = 'Robustness-Security'
+
 app.set_grid(4, 1)
 app.add(welcome_text, 1, 1, align='center', valign='bottom')
 app.add(start_btn, 2, 1, align='center')
