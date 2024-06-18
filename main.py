@@ -1,9 +1,9 @@
 import gooeypie as gp
 import time
+# import pyperclip
 
 
-
-def load_common_passwords(filename):
+def load_common_passwords(filename): #loads list of common passwords
    with open(filename, 'r') as file:
        common_passwords = file.read().splitlines()
    return common_passwords
@@ -19,16 +19,18 @@ dictionary_words = load_dictionary_words('words.txt')
 
 password = ''
 
-def open_main_window(password):    
+def open_main_window():    
+    global password
 
     def check_length(password, password_feedback_length, password_length_text):
         length_score = 0
         l = len(password)
+        password_length_text.text = "Password Length:"
         if len(password) == 0:
             password_feedback_length.text = "Type a password :)"
 
         else:
-            password_length_text.text = "Password Length:"
+            
             if l < 5:
                 length_score = 0
                 password_feedback_length.text = "Weak"
@@ -44,14 +46,14 @@ def open_main_window(password):
              
     def check_case(password, password_case_feedback, password_case_text):
         upper_case_score = 0
- 
+        password_case_text.text = 'Uppercase:'
         if len(password) > 0:
         
             for char in password:
                 if char.isupper():
                     upper_case_score += 50
             
-            password_case_text.text = 'Uppercase:'
+            
             if upper_case_score == 0:
                 password_case_feedback.text = 'Weak'
             elif upper_case_score == 50:
@@ -66,14 +68,14 @@ def open_main_window(password):
 
     def check_special_char(password, password_special_char_feedback, password_special_char_text):
         special_char_score = 0
-
+        password_special_char_text.text = 'Special Characters:'
         if len(password) > 0: 
             symbols = "`~!@#$%^&*()_-+={[}]|\:;'<,>.?/}\\\""
             for char in password:
                 if char in symbols:
                     special_char_score += 50
 
-            password_special_char_text.text = 'Special Characters:'
+            
             if special_char_score == 0:
                 password_special_char_feedback.text = 'Weak'
             elif special_char_score == 50: 
@@ -88,9 +90,9 @@ def open_main_window(password):
         
     def check_common_passwords(password, common_password_feedback, common_password_text, common_passwords):
         common_password_score = 0
-        
+        common_password_text.text = 'Common Password:'
         if len(password) > 0:
-            common_password_text.text = 'Common Password:'
+            
             if len(password) > 4:
                 if password in common_passwords:
                     common_password_score = 0
@@ -109,14 +111,14 @@ def open_main_window(password):
 
     def check_numbers(password, password_number_feedback, password_number_text):
         numbers_score = 0
-
+        password_number_text.text = 'Numbers:'
         if len(password) > 0:
             numbers = "1234567890"
             for char in password:
                 if char in numbers:
                     numbers_score += 50
             
-            password_number_text.text = 'Numbers:'
+            
             if numbers_score == 0:
                 password_number_feedback.text = 'Weak'
             elif numbers_score == 50: 
@@ -131,9 +133,9 @@ def open_main_window(password):
     
     def check_dictionary_words(password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words):
         dictionary_score = 0
-
+        password_dictionary_word_text.text = 'Dictionary Word:'
         if len(password) > 0:
-            password_dictionary_word_text.text = 'Dictionary Word:'
+            
             if len(password) > 4: 
                 if password in dictionary_words:
                     dictionary_score = 0
@@ -142,14 +144,14 @@ def open_main_window(password):
                     password_dictionary_word_feedback.text = 'No' 
                     dictionary_score = 100
         else: 
-            password_dictionary_word_text.text = ''
+            password_dictionary_word_feedback.text = ''
         
         return dictionary_score
         
     def overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, password):
-        
+        overall_score_text.text = 'Overall Score:'
         if len(password) > 0:
-            overall_score_text.text = 'Overall Score:'
+            
             x = length_score + upper_case_score + special_char_score + numbers_score + common_passwords_score + dictionary_sore
             x = x/6
             x = round(x)
@@ -179,11 +181,59 @@ def open_main_window(password):
             strength_bar.value = x
         else:
             overall_score_feedback.text = 'Type a password :)'
+            strength_bar.value = 0
 
     def help_btn(event):
+        def back_btn(event):
+            help_text.destroy()
+            back_button.destroy()
+            open_main_window()
 
-        pass
-
+        app.grid_remove()
+        app.set_grid(2, 1)
+        back_button = gp.Button(app, 'Back', back_btn)
+        help_text = gp.Label(app, '')
+        help_text.text = (
+            "Here is how to use the Robustness Security Password Checker!\n\n"
+            "1. Type your password into the provided input field.\n"
+            "2. Click the 'Show Password' button to see your password.\n"
+            "3. Click the 'Feedback' button to get an analysis of your password's strength.\n"
+            "    - **Length**: Indicates how long your password is.\n"
+            "    - **Uppercase Letters**: Checks for the presence of 2 uppercase letters.\n"
+            "    - **Special Characters**: Checks for 2 special characters like @, #, $, etc.\n"
+            "    - **Numbers**: Checks for the presence of 2 numeric characters.\n"
+            "    - **Common Password**: Checks if your password is a commonly.\n"
+            "    - **Dictionary Words**: Checks if your password is a dictionary word.\n"
+            "4. The overall score combines all the criteria to give you an overall rating.\n"
+            "5. Use the 'Copy' button to copy your password to the clipboard for easy use.\n"
+            "6. Click the 'About' button to learn more about Robustness Security.\n"
+           
+        )
+        app.add(back_button, 2, 1, align='center')
+        app.add(help_text, 1, 1)
+        about_button.destroy()
+        input_password.destroy()
+        password_prompt.destroy()
+        check.destroy()
+        password_feedback_length.destroy()
+        password_length_text.destroy()
+        password_case_feedback.destroy()
+        password_case_text.destroy()
+        password_special_char_text.destroy()
+        password_special_char_feedback.destroy()
+        password_number_text.destroy()
+        password_number_feedback.destroy()
+        help_button.destroy()
+        copy_password_button.destroy()
+        common_password_text.destroy()
+        common_password_feedback.destroy()
+        password_dictionary_word_feedback.destroy()
+        password_dictionary_word_text.destroy()
+        overall_score_feedback.destroy()
+        overall_score_text.destroy()
+        detailed_feedback.destroy()
+        strength_bar.destroy()
+        
     def abt_btn(event):
         def back_btn(event):
             about_text.destroy()
@@ -214,14 +264,33 @@ def open_main_window(password):
         overall_score_feedback.destroy()
         overall_score_text.destroy()
         detailed_feedback.destroy()
+        strength_bar.destroy()
 
         back_button = gp.Button(app, 'Back', back_btn)
         about_text = gp.Label(app, '')
-        about_text.text = 'Welcome to Robustness Security, your reliable partner in password protection. \n In todays digital age, safeguarding your online presence is more critical than \n ever. Robustness Security is here to help you ensure that your passwords are \n strong, secure, and resilient against potential threats. '
+        about_text.text = ( 
+        "At Robustness Security, we provide top-tierassword protection. \n\n"
+
+        "The importance of securing your online presence cannot be overstated. \n\n"
+        
+        "Our advanced algorithms analyze and assess the strength of your passwords.\n\n"
+               
+        "We provide detailed feedback and tips on how to create strong passwords. \n\n"
+        
+        "Our aim is to educate users on best practices for password management.\n\n"
+        
+        "Our tool is designed to be intuitive, allowing users of all technical levels.\n\n"
+                
+        "Our dedicated support team is available to assist you with any questions.\n\n"
+        
+        "Thank you for choosing us. Together, we can build a safer digital world."
+        )
+
         app.add(back_button, 2, 1, align='center')
         app.add(about_text, 1, 1)
 
     def copy_btn(event):
+        # pyperclip.copy(password)
 
         pass
 
@@ -229,6 +298,23 @@ def open_main_window(password):
         input_password.toggle()
 
     def on_password_change(event):
+        global password
+        password = input_password.text
+        
+
+        length_score = check_length(password, password_feedback_length, password_length_text)
+        upper_case_score = check_case(password, password_case_feedback, password_case_text)
+        special_char_score = check_special_char(password, password_special_char_feedback, password_special_char_text)
+        numbers_score = check_numbers(password, password_number_feedback, password_number_text)
+        common_passwords_score = check_common_passwords(password, common_password_feedback, common_password_text, common_passwords)
+        dictionary_sore = check_dictionary_words(password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words)
+        overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, password)
+        print (length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore)
+
+        return password
+    
+    def initial_feedback():
+        global password
         password = input_password.text
         
 
@@ -258,7 +344,7 @@ def open_main_window(password):
             password_special_char_text.destroy()
             common_password_feedback.destroy()
             common_password_text.destroy()
-
+            app.grid_remove
 
             back_button.destroy()
             open_main_window()
@@ -271,6 +357,7 @@ def open_main_window(password):
         help_button.destroy()
         overall_score_feedback.destroy()
         overall_score_text.destroy()
+        strength_bar.destroy()
 
         check.destroy()
         app.grid_remove
@@ -328,16 +415,18 @@ def open_main_window(password):
     copy_password_button = gp.Button(app, 'Copy', copy_btn)
 
     app.add(strength_bar, 3, 1, column_span = 3, fill=True)
-    app.add(password_prompt, 1, 1)
+    app.add(password_prompt, 1, 1, align='right')
     app.add(input_password, 1, 2)
-    app.add(check, 1, 3)
-    app.add(copy_password_button, 4, 1)
-    app.add(about_button, 4, 3)
-    app.add(help_button, 4, 2)
+    app.add(check, 1, 3, align='center')
+    app.add(copy_password_button, 4, 1, align='center')
+    app.add(about_button, 4, 3, align='center')
+    app.add(help_button, 4, 2, align='center')
     app.add(overall_score_text, 2, 1)
     app.add(overall_score_feedback, 2, 2)
-    app.add(detailed_feedback, 2, 3)
-
+    app.add(detailed_feedback, 2, 3, align='center')
+    
+    initial_feedback()
+ 
 def start_button(event):
     start_lbl.text = 'Loading Assets'
     thinking_pb.value = 0
@@ -347,7 +436,7 @@ def start_button(event):
         app.refresh()
         time.sleep(0.02)
 
-    open_main_window(password)
+    open_main_window()
 
 app = gp.GooeyPieApp('Robustness Security')
 app.width = 450
