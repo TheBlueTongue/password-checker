@@ -94,6 +94,9 @@ def open_main_window():  #the main window of the program
         return special_char_score
         
     def check_common_passwords(password, common_password_feedback, common_password_text, common_passwords):
+        
+        
+        
         common_password_score = 0
         common_password_text.text = 'Common Password:'
         if len(password) > 0:
@@ -294,10 +297,14 @@ def open_main_window():  #the main window of the program
         app.add(back_button, 2, 1, align='center')
         app.add(about_text, 1, 1)
 
+    def reset_copy_btn():
+        copy_password_button.image = "icons/copy-alt.png"
+
     def copy_btn(event):
         pyperclip.copy(password)
-        copy_password_button
-
+        copy_password_button.image = "icons/check.png"
+        app.after(2000, reset_copy_btn)
+   
     def password_anlysis():  
         global password
         password = input_password.text
@@ -423,7 +430,7 @@ def open_main_window():  #the main window of the program
     app.add(strength_bar, 3, 1, column_span = 3, fill=True)
     app.add(password_prompt, 1, 1, align='right')
     app.add(input_password, 1, 2)
-    app.add(check, 1, 3, align='center')
+    app.add(check, 1, 3, align='center', valign='top')
     app.add(copy_password_button, 4, 1, align='center')
     app.add(about_button, 4, 3, align='center')
     app.add(help_button, 4, 2, align='center')
@@ -463,7 +470,7 @@ app.add(welcome_text, 1, 1, align='center', valign='bottom')
 app.add(start_btn, 2, 1, align='center')
 app.add(start_lbl, 3, 1, align='center')
 app.add(thinking_pb, 4, 1, fill=True)
-
+app.set_icon('icons/lock.png')
 app.run()
 
 
