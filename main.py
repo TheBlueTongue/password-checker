@@ -97,7 +97,7 @@ def open_main_window():  #the main window of the program
         common_password_score = 0
         common_password_text.text = 'Common Password:'
         if len(password) > 0:
-            
+            common_password_feedback.text = 'Yes'
             if len(password) >= 4:
                 if password in common_passwords:
                     common_password_score = 0
@@ -110,7 +110,7 @@ def open_main_window():  #the main window of the program
                     common_password_feedback.text = 'Yes'
             
         else: 
-            common_password_feedback.text = 'Yes'
+            common_password_feedback.text = ''
 
         return common_password_score
 
@@ -140,7 +140,7 @@ def open_main_window():  #the main window of the program
         dictionary_score = 0
         password_dictionary_word_text.text = 'Dictionary Word:'
         if len(password) > 0:
-            
+            password_dictionary_word_feedback.text = 'Yes'
             if len(password) >= 4: 
                 if password in dictionary_words:
                     dictionary_score = 0
@@ -149,7 +149,7 @@ def open_main_window():  #the main window of the program
                     password_dictionary_word_feedback.text = 'No' 
                     dictionary_score = 100
         else: 
-            password_dictionary_word_feedback.text = 'Yes'
+            password_dictionary_word_feedback.text = ''
         
         return dictionary_score
         
