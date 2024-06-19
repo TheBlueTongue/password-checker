@@ -4,8 +4,6 @@ import pyperclip
 
 from pyhibp import pwnedpasswords
 from pyhibp import set_user_agent
-
-
 set_user_agent(ua="Robustness Security")
 
 def load_common_passwords(filename): #loads list of common passwords
@@ -22,18 +20,18 @@ def load_dictionary_words(filename): #loads list of dictionart words
 
 dictionary_words = load_dictionary_words('words.txt')
 
-password = '' #sets initial password to empty
+user_password = '' #sets initial password to empty
 
 password_visible = False
 
 def open_main_window():  #the main window of the program
-    global password
+    global user_password
 
-    def check_length(password, password_feedback_length, password_length_text):
+    def check_length(user_password, password_feedback_length, password_length_text):
         length_score = 0
-        l = len(password)
+        l = len(user_password)
         password_length_text.text = "Password Length:"
-        if len(password) == 0:
+        if len(user_password) == 0:
             password_feedback_length.text = "Type a password :)"
         else:   
             if l < 5:
@@ -49,12 +47,12 @@ def open_main_window():  #the main window of the program
 
         return length_score
              
-    def check_case(password, password_case_feedback, password_case_text):
+    def check_case(user_password, password_case_feedback, password_case_text):
         upper_case_score = 0
         password_case_text.text = 'Uppercase:'
-        if len(password) > 0:
+        if len(user_password) > 0:
         
-            for char in password:
+            for char in user_password:
                 if char.isupper():
                     upper_case_score += 50
             
@@ -71,12 +69,12 @@ def open_main_window():  #the main window of the program
 
         return upper_case_score
 
-    def check_special_char(password, password_special_char_feedback, password_special_char_text):
+    def check_special_char(user_password, password_special_char_feedback, password_special_char_text):
         special_char_score = 0
         password_special_char_text.text = 'Special Characters:'
-        if len(password) > 0: 
+        if len(user_password) > 0: 
             symbols = "`~!@#$%^&*()_-+={[}]|\:;'<,>.?/}\\\""
-            for char in password:
+            for char in user_password:
                 if char in symbols:
                     special_char_score += 50
 
@@ -93,36 +91,44 @@ def open_main_window():  #the main window of the program
 
         return special_char_score
         
-    def check_common_passwords(password, common_password_feedback, common_password_text, common_passwords):
-        
-        
-        
+    def check_common_passwords(user_password, common_password_feedback, common_password_text, common_passwords):
         common_password_score = 0
-        common_password_text.text = 'Common Password:'
-        if len(password) > 0:
-            common_password_feedback.text = 'Yes'
-            if len(password) >= 4:
-                if password in common_passwords:
+        internet_connection = True
+        try:
+            times_pwned = pwnedpasswords.is_password_breached(password=user_password)
+        except:
+            internet_connection = False
+
+        if internet_connection == False:
+            common_password_text.text = 'Common Password:'
+            if len(user_password) > 0:
+                if user_password in common_passwords:
                     common_password_score = 0
+                    common_password_feedback.text = 'Yes'
                 else:
                     common_password_score = 100
-                
-                if common_password_score == 100:
                     common_password_feedback.text = 'No'
-                if common_password_score == 0:
-                    common_password_feedback.text = 'Yes'
-            
-        else: 
-            common_password_feedback.text = ''
-
+            else: 
+                common_password_feedback.text = ''
+        else:
+            common_password_text.text = "Breached password:"
+            if times_pwned == 0:
+                common_password_feedback.text = "No"
+                common_password_score = 100
+            else:
+                common_password_feedback.text = f'Yes ({times_pwned} times)'
+                common_password_score = 0
+                
         return common_password_score
 
-    def check_numbers(password, password_number_feedback, password_number_text):
+
+
+    def check_numbers(user_password, password_number_feedback, password_number_text):
         numbers_score = 0
         password_number_text.text = 'Numbers:'
-        if len(password) > 0:
+        if len(user_password) > 0:
             numbers = "1234567890"
-            for char in password:
+            for char in user_password:
                 if char in numbers:
                     numbers_score += 50
             
@@ -139,13 +145,13 @@ def open_main_window():  #the main window of the program
 
         return numbers_score
     
-    def check_dictionary_words(password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words):
+    def check_dictionary_words(user_password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words):
         dictionary_score = 0
         password_dictionary_word_text.text = 'Dictionary Word:'
-        if len(password) > 0:
+        if len(user_password) > 0:
             password_dictionary_word_feedback.text = 'Yes'
-            if len(password) >= 4: 
-                if password in dictionary_words:
+            if len(user_password) >= 4: 
+                if user_password in dictionary_words:
                     dictionary_score = 0
                     password_dictionary_word_feedback.text = 'Yes'
                 else:
@@ -156,9 +162,9 @@ def open_main_window():  #the main window of the program
         
         return dictionary_score
         
-    def overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, password):
+    def overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, user_password):
         overall_score_text.text = 'Overall Score:'
-        if len(password) > 0:
+        if len(user_password) > 0:
             
             x = length_score + upper_case_score + special_char_score + numbers_score + common_passwords_score + dictionary_sore
             x = x/6
@@ -301,24 +307,24 @@ def open_main_window():  #the main window of the program
         copy_password_button.image = "icons/copy-alt.png"
 
     def copy_btn(event):
-        pyperclip.copy(password)
+        pyperclip.copy(user_password)
         copy_password_button.image = "icons/check.png"
         app.after(2000, reset_copy_btn)
    
     def password_anlysis():  
-        global password
-        password = input_password.text
+        global user_password
+        user_password = input_password.text
         
-        length_score = check_length(password, password_feedback_length, password_length_text)
-        upper_case_score = check_case(password, password_case_feedback, password_case_text)
-        special_char_score = check_special_char(password, password_special_char_feedback, password_special_char_text)
-        numbers_score = check_numbers(password, password_number_feedback, password_number_text)
-        common_passwords_score = check_common_passwords(password, common_password_feedback, common_password_text, common_passwords)
-        dictionary_sore = check_dictionary_words(password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words)
-        overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, password)
+        length_score = check_length(user_password, password_feedback_length, password_length_text)
+        upper_case_score = check_case(user_password, password_case_feedback, password_case_text)
+        special_char_score = check_special_char(user_password, password_special_char_feedback, password_special_char_text)
+        numbers_score = check_numbers(user_password, password_number_feedback, password_number_text)
+        common_passwords_score = check_common_passwords(user_password, common_password_feedback, common_password_text, common_passwords)
+        dictionary_sore = check_dictionary_words(user_password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words)
+        overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, user_password)
         print (length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore)
 
-        return password
+        return user_password
 
     def check_btn(event):
         global password_visible
@@ -331,13 +337,7 @@ def open_main_window():  #the main window of the program
             password_visible = False
             check.image = 'icons/eye.png'
             return password_visible
-      
-
-        
-
-
-
-        
+                 
     def on_password_change(event):
         password_anlysis()
        
@@ -399,7 +399,7 @@ def open_main_window():  #the main window of the program
     app.set_grid(4, 3)
 
     input_password = gp.Secret(app)
-    input_password.text = password
+    input_password.text = user_password
 
     input_password.add_event_listener('change', on_password_change)
     password_prompt = gp.Label(app, 'Enter Password:')
@@ -428,9 +428,9 @@ def open_main_window():  #the main window of the program
     check = gp.ImageButton(app, 'icons/eye.png', check_btn)
 
     app.add(strength_bar, 3, 1, column_span = 3, fill=True)
-    app.add(password_prompt, 1, 1, align='right')
-    app.add(input_password, 1, 2)
-    app.add(check, 1, 3, align='center', valign='top')
+    app.add(password_prompt, 1, 1, align='right', valign='middle')
+    app.add(input_password, 1, 2, valign='middle')
+    app.add(check, 1, 3, align='center', valign='middle')
     app.add(copy_password_button, 4, 1, align='center')
     app.add(about_button, 4, 3, align='center')
     app.add(help_button, 4, 2, align='center')
