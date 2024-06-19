@@ -1,7 +1,12 @@
 import gooeypie as gp
 import time
-# import pyperclip
+import pyperclip
 
+from pyhibp import pwnedpasswords
+from pyhibp import set_user_agent
+
+
+set_user_agent(ua="Robustness Security")
 
 def load_common_passwords(filename): #loads list of common passwords
    with open(filename, 'r') as file:
@@ -290,45 +295,30 @@ def open_main_window():  #the main window of the program
         app.add(about_text, 1, 1)
 
     def copy_btn(event):
-        # pyperclip.copy(password)
+        pyperclip.copy(password)
+        copy_password_button
 
-        pass
+    def password_anlysis():  
+        global password
+        password = input_password.text
+        
+        length_score = check_length(password, password_feedback_length, password_length_text)
+        upper_case_score = check_case(password, password_case_feedback, password_case_text)
+        special_char_score = check_special_char(password, password_special_char_feedback, password_special_char_text)
+        numbers_score = check_numbers(password, password_number_feedback, password_number_text)
+        common_passwords_score = check_common_passwords(password, common_password_feedback, common_password_text, common_passwords)
+        dictionary_sore = check_dictionary_words(password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words)
+        overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, password)
+        print (length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore)
+
+        return password
 
     def check_btn(event):
         input_password.toggle()
-
+        
     def on_password_change(event):
-        global password
-        password = input_password.text
-        
-
-        length_score = check_length(password, password_feedback_length, password_length_text)
-        upper_case_score = check_case(password, password_case_feedback, password_case_text)
-        special_char_score = check_special_char(password, password_special_char_feedback, password_special_char_text)
-        numbers_score = check_numbers(password, password_number_feedback, password_number_text)
-        common_passwords_score = check_common_passwords(password, common_password_feedback, common_password_text, common_passwords)
-        dictionary_sore = check_dictionary_words(password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words)
-        overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, password)
-        print (length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore)
-
-        return password
-    
-    def initial_feedback():
-        global password
-        password = input_password.text
-        
-
-        length_score = check_length(password, password_feedback_length, password_length_text)
-        upper_case_score = check_case(password, password_case_feedback, password_case_text)
-        special_char_score = check_special_char(password, password_special_char_feedback, password_special_char_text)
-        numbers_score = check_numbers(password, password_number_feedback, password_number_text)
-        common_passwords_score = check_common_passwords(password, common_password_feedback, common_password_text, common_passwords)
-        dictionary_sore = check_dictionary_words(password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words)
-        overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, password)
-        print (length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore)
-
-        return password
-    
+        password_anlysis()
+       
     def feedback_btn(event):
         
         def back_btn(event):
@@ -425,7 +415,7 @@ def open_main_window():  #the main window of the program
     app.add(overall_score_feedback, 2, 2)
     app.add(detailed_feedback, 2, 3, align='center')
     
-    initial_feedback()
+    password_anlysis()
  
 def start_button(event): #opens the main window
     start_lbl.text = 'Loading Assets'
