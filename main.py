@@ -10,16 +10,16 @@ def load_common_passwords(filename): #loads list of common passwords
 
 common_passwords = load_common_passwords('common passwords list.ini')
 
-def load_dictionary_words(filename):
+def load_dictionary_words(filename): #loads list of dictionart words
     with open(filename, 'r') as file:
         dictionary_words = file.read().splitlines()
     return dictionary_words
 
 dictionary_words = load_dictionary_words('words.txt')
 
-password = ''
+password = '' #sets initial password to empty
 
-def open_main_window():    
+def open_main_window():  #the main window of the program
     global password
 
     def check_length(password, password_feedback_length, password_length_text):
@@ -93,7 +93,7 @@ def open_main_window():
         common_password_text.text = 'Common Password:'
         if len(password) > 0:
             
-            if len(password) > 4:
+            if len(password) >= 4:
                 if password in common_passwords:
                     common_password_score = 0
                 else:
@@ -105,7 +105,7 @@ def open_main_window():
                     common_password_feedback.text = 'Yes'
             
         else: 
-            common_password_feedback.text = ''
+            common_password_feedback.text = 'Yes'
 
         return common_password_score
 
@@ -136,7 +136,7 @@ def open_main_window():
         password_dictionary_word_text.text = 'Dictionary Word:'
         if len(password) > 0:
             
-            if len(password) > 4: 
+            if len(password) >= 4: 
                 if password in dictionary_words:
                     dictionary_score = 0
                     password_dictionary_word_feedback.text = 'Yes'
@@ -144,7 +144,7 @@ def open_main_window():
                     password_dictionary_word_feedback.text = 'No' 
                     dictionary_score = 100
         else: 
-            password_dictionary_word_feedback.text = ''
+            password_dictionary_word_feedback.text = 'Yes'
         
         return dictionary_score
         
@@ -421,17 +421,17 @@ def open_main_window():
     app.add(copy_password_button, 4, 1, align='center')
     app.add(about_button, 4, 3, align='center')
     app.add(help_button, 4, 2, align='center')
-    app.add(overall_score_text, 2, 1)
+    app.add(overall_score_text, 2, 1, align='right')
     app.add(overall_score_feedback, 2, 2)
     app.add(detailed_feedback, 2, 3, align='center')
     
     initial_feedback()
  
-def start_button(event):
+def start_button(event): #opens the main window
     start_lbl.text = 'Loading Assets'
     thinking_pb.value = 0
 
-    for steps in range(20):
+    for steps in range(20): #moves loading bar
         thinking_pb.value += 5
         app.refresh()
         time.sleep(0.02)
@@ -441,6 +441,8 @@ def start_button(event):
 app = gp.GooeyPieApp('Robustness Security')
 app.width = 450
 app.height = 300
+app.resizable_horizontal = False
+app.resizable_vertical = False
 
 start_btn = gp.Button(app, 'Start', start_button)
 start_lbl = gp.Label(app, '')
