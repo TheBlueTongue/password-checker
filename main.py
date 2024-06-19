@@ -24,6 +24,8 @@ dictionary_words = load_dictionary_words('words.txt')
 
 password = '' #sets initial password to empty
 
+password_visible = False
+
 def open_main_window():  #the main window of the program
     global password
 
@@ -33,9 +35,7 @@ def open_main_window():  #the main window of the program
         password_length_text.text = "Password Length:"
         if len(password) == 0:
             password_feedback_length.text = "Type a password :)"
-
-        else:
-            
+        else:   
             if l < 5:
                 length_score = 0
                 password_feedback_length.text = "Weak"
@@ -314,7 +314,22 @@ def open_main_window():  #the main window of the program
         return password
 
     def check_btn(event):
+        global password_visible
         input_password.toggle()
+        if password_visible == False:
+            password_visible = True
+            check.image = 'icons/eye-crossed.png'
+            return password_visible
+        if password_visible == True:
+            password_visible = False
+            check.image = 'icons/eye.png'
+            return password_visible
+      
+
+        
+
+
+
         
     def on_password_change(event):
         password_anlysis()
@@ -381,7 +396,7 @@ def open_main_window():  #the main window of the program
 
     input_password.add_event_listener('change', on_password_change)
     password_prompt = gp.Label(app, 'Enter Password:')
-    check = gp.Button(app, 'Show Password', check_btn)
+   
 
     password_feedback_length = gp.Label(app, '')
     password_length_text = gp.Label(app, '')
@@ -400,9 +415,10 @@ def open_main_window():  #the main window of the program
     strength_bar = gp.Progressbar(app)
     
     detailed_feedback = gp.Button(app, 'Feedback', feedback_btn)
-    help_button = gp.Button(app, 'Help', help_btn)
-    about_button = gp.Button(app, 'About', abt_btn)
-    copy_password_button = gp.Button(app, 'Copy', copy_btn)
+    help_button = gp.ImageButton(app, 'icons/interrogation.png', help_btn)
+    about_button = gp.ImageButton(app, 'icons/info.png', abt_btn)
+    copy_password_button = gp.ImageButton(app, 'icons/copy-alt.png', copy_btn)
+    check = gp.ImageButton(app, 'icons/eye.png', check_btn)
 
     app.add(strength_bar, 3, 1, column_span = 3, fill=True)
     app.add(password_prompt, 1, 1, align='right')
@@ -434,7 +450,7 @@ app.height = 300
 app.resizable_horizontal = False
 app.resizable_vertical = False
 
-start_btn = gp.Button(app, 'Start', start_button)
+start_btn = gp.ImageButton(app, 'icons/play-circle.png', start_button)
 start_lbl = gp.Label(app, '')
 welcome_text = gp.StyleLabel(app, '')
 thinking_pb = gp.Progressbar(app)
