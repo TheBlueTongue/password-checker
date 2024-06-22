@@ -27,29 +27,34 @@ password_visible = False
 def open_main_window():  #the main window of the program
     global user_password
 
-    def check_length(user_password, password_feedback_length, password_length_text):
+    def check_length(user_password, password_feedback_length, password_length_text, password_length_image):
         length_score = 0
         l = len(user_password)
         password_length_text.text = "Password Length:"
         if len(user_password) == 0:
             password_feedback_length.text = "Type a password :)"
+            password_length_image.image = 'icons/red circle.png'
         else:   
             if l < 5:
                 length_score = 0
                 password_feedback_length.text = "Weak"
+                password_length_image.image = 'icons/red circle.png'
+
             elif l >= 5 and l < 10:
                 password_feedback_length.text = "Moderate"
                 length_score = 50
-            
+                password_length_image.image = 'icons/yellow circle.png'
             elif l >= 10:
                 password_feedback_length.text = "Strong"
                 length_score = 100
+                password_length_image.image = 'icons/green circle.png'
 
         return length_score
              
-    def check_case(user_password, password_case_feedback, password_case_text):
+    def check_case(user_password, password_case_feedback, password_case_text, password_case_image):
         upper_case_score = 0
         password_case_text.text = 'Uppercase:'
+        
         if len(user_password) > 0:
         
             for char in user_password:
@@ -59,17 +64,21 @@ def open_main_window():  #the main window of the program
             
             if upper_case_score == 0:
                 password_case_feedback.text = 'Weak'
+                password_case_image.image = 'icons/red circle.png'
             elif upper_case_score == 50:
                 password_case_feedback.text = 'Moderate'
+                password_case_image.image = 'icons/yellow circle.png'
             elif upper_case_score == 100 or upper_case_score > 100:
-                password_case_feedback.text = '🟢'
+                password_case_feedback.text = 'strong'
                 upper_case_score = 100
+                password_case_image.image = 'icons/green circle.png'
         else:
             password_case_feedback.text = ''
+            password_case_image.image = 'icons/red circle.png'
 
         return upper_case_score
 
-    def check_special_char(user_password, password_special_char_feedback, password_special_char_text):
+    def check_special_char(user_password, password_special_char_feedback, password_special_char_text, password_special_character_image):
         special_char_score = 0
         password_special_char_text.text = 'Special Characters:'
         if len(user_password) > 0: 
@@ -81,13 +90,17 @@ def open_main_window():  #the main window of the program
             
             if special_char_score == 0:
                 password_special_char_feedback.text = 'Weak'
+                password_special_character_image.image = 'icons/red circle.png'
             elif special_char_score == 50: 
                 password_special_char_feedback.text = 'Moderate'
+                password_special_character_image.image = 'icons/yellow circle.png'
             elif special_char_score == 100 or special_char_score > 100:
                 password_special_char_feedback.text = 'Strong'
                 special_char_score = 100
+                password_special_character_image.image = 'icons/green circle.png'
         else: 
             password_special_char_feedback.text = ''
+            password_special_character_image.image = 'icons/red circle.png'
 
         return special_char_score
         
@@ -116,14 +129,12 @@ def open_main_window():  #the main window of the program
                 common_password_feedback.text = "No"
                 common_password_score = 100
             else:
-                common_password_feedback.text = f'Yes ({times_pwned} times)'
+                common_password_feedback.text = 'Yes'
                 common_password_score = 0
                 
         return common_password_score
 
-
-
-    def check_numbers(user_password, password_number_feedback, password_number_text):
+    def check_numbers(user_password, password_number_feedback, password_number_text, password_number_image):
         numbers_score = 0
         password_number_text.text = 'Numbers:'
         if len(user_password) > 0:
@@ -135,13 +146,17 @@ def open_main_window():  #the main window of the program
             
             if numbers_score == 0:
                 password_number_feedback.text = 'Weak'
+                password_number_image.image = 'icons/red circle.png'
             elif numbers_score == 50: 
                 password_number_feedback.text = 'Moderate'
+                password_number_image.image = 'icons/yellow circle.png'
             elif numbers_score == 100 or numbers_score > 100:
                 password_number_feedback.text = 'Strong'
                 numbers_score = 100
+                password_number_image.image = 'icons/green circle.png'
         else:
             password_number_feedback.text = ''
+            password_number_image.image = 'icons/red circle.png'
 
         return numbers_score
     
@@ -315,14 +330,14 @@ def open_main_window():  #the main window of the program
         global user_password
         user_password = input_password.text
         
-        length_score = check_length(user_password, password_feedback_length, password_length_text)
-        upper_case_score = check_case(user_password, password_case_feedback, password_case_text)
-        special_char_score = check_special_char(user_password, password_special_char_feedback, password_special_char_text)
-        numbers_score = check_numbers(user_password, password_number_feedback, password_number_text)
+        length_score = check_length(user_password, password_feedback_length, password_length_text, password_length_image)
+        upper_case_score = check_case(user_password, password_case_feedback, password_case_text, password_case_image)
+        special_char_score = check_special_char(user_password, password_special_char_feedback, password_special_char_text, password_special_character_image)
+        numbers_score = check_numbers(user_password, password_number_feedback, password_number_text, password_number_image)
         common_passwords_score = check_common_passwords(user_password, common_password_feedback, common_password_text, common_passwords)
         dictionary_sore = check_dictionary_words(user_password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words)
         overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, user_password)
-        print (length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore)
+       
 
         return user_password
 
@@ -356,6 +371,10 @@ def open_main_window():  #the main window of the program
             password_special_char_text.destroy()
             common_password_feedback.destroy()
             common_password_text.destroy()
+            password_length_image.destroy()
+            password_case_image.destroy()
+            password_number_image.destroy()
+            password_special_character_image.destroy()
             app.grid_remove
 
             back_button.destroy()
@@ -391,6 +410,11 @@ def open_main_window():  #the main window of the program
         app.add(password_dictionary_word_text, 6, 1)
         app.add(back_button, 7, 1)
 
+        app.add(password_length_image, 1, 3)
+        app.add(password_case_image, 2, 3)
+        app.add(password_special_character_image, 3, 3)
+        app.add(password_number_image, 4, 3)
+
     start_btn.destroy()
     start_lbl.destroy()
     welcome_text.destroy()
@@ -405,27 +429,34 @@ def open_main_window():  #the main window of the program
     password_prompt = gp.Label(app, 'Enter Password:')
    
 
-    password_feedback_length = gp.Label(app, '')
+    
     password_length_text = gp.Label(app, '')
-    password_case_feedback = gp.StyleLabel(app, '')
     password_case_text = gp.Label(app, '')
     password_special_char_text = gp.Label(app, '')
-    password_special_char_feedback = gp.Label(app, '')
-    password_number_feedback = gp.Label(app, '')
     password_number_text = gp.Label(app, '')
-    common_password_feedback = gp.Label(app, '')
     common_password_text = gp.Label(app, '')
     password_dictionary_word_text = gp.Label(app, '')
-    password_dictionary_word_feedback = gp.Label(app, '')
     overall_score_text = gp.Label(app, '')
-    overall_score_feedback = gp.Label(app, '')
     strength_bar = gp.Progressbar(app)
     
+    password_case_feedback = gp.StyleLabel(app, '')
+    password_special_char_feedback = gp.Label(app, '')
+    password_number_feedback = gp.Label(app, '')
+    common_password_feedback = gp.Label(app, '')
+    password_dictionary_word_feedback = gp.Label(app, '')
+    overall_score_feedback = gp.Label(app, '')
+    password_feedback_length = gp.Label(app, '')
     detailed_feedback = gp.Button(app, 'Feedback', feedback_btn)
     help_button = gp.ImageButton(app, 'icons/interrogation.png', help_btn)
     about_button = gp.ImageButton(app, 'icons/info.png', abt_btn)
     copy_password_button = gp.ImageButton(app, 'icons/copy-alt.png', copy_btn)
     check = gp.ImageButton(app, 'icons/eye.png', check_btn)
+
+    password_length_image = gp.Image(app, 'icons/green circle.png')
+    password_case_image = gp.Image(app, 'icons/green circle.png')
+    password_special_character_image = gp.Image(app, 'icons/green circle.png')
+    password_number_image = gp.Image(app, 'icons/green circle.png')
+
 
     app.add(strength_bar, 3, 1, column_span = 3, fill=True)
     app.add(password_prompt, 1, 1, align='right', valign='middle')
@@ -464,6 +495,7 @@ thinking_pb = gp.Progressbar(app)
 
 welcome_text.font_name = "aharoni"
 welcome_text.text = 'Robustness-Security'
+welcome_text.font_size = 30
 
 app.set_grid(4, 1)
 app.add(welcome_text, 1, 1, align='center', valign='bottom')
