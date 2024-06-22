@@ -324,7 +324,7 @@ def open_main_window():  #the main window of the program
     def copy_btn(event):
         pyperclip.copy(user_password)
         copy_password_button.image = "icons/check.png"
-        app.after(2000, reset_copy_btn)
+        app.after(500, reset_copy_btn)
    
     def password_anlysis():  
         global user_password
