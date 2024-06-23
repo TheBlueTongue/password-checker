@@ -69,7 +69,7 @@ def open_main_window():  #the main window of the program
                 password_case_feedback.text = 'Moderate'
                 password_case_image.image = 'icons/yellow circle.png'
             elif upper_case_score == 100 or upper_case_score > 100:
-                password_case_feedback.text = 'strong'
+                password_case_feedback.text = 'Strong'
                 upper_case_score = 100
                 password_case_image.image = 'icons/green circle.png'
         else:
