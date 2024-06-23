@@ -1,7 +1,7 @@
 
 
 
-![Logo](file:///C:/Users/daver/OneDrive%20-%20St%20Augustines%20College/Year%2011/password%20checker/lock.svg)
+![Logo](http://www.w3.org/2000/svg)
 
 
 
