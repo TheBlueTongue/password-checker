@@ -28,6 +28,11 @@ The worlds leading and most secure password checker. This password checker was c
   pip install pyhibp
 ```
 
+Navigate to the repository and clone it https://github.com/TheBlueTongue/password-checker
+Open and run the repository
+Type in a password you want to check or make one up and you are all set. 
+
+
 ## Contributing
 
 Contributions are always welcome!
