@@ -1,10 +1,12 @@
 import gooeypie as gp
 import time
 import pyperclip
-
 from pyhibp import pwnedpasswords
 from pyhibp import set_user_agent
-set_user_agent(ua="Robustness Security")
+# different imports
+
+set_user_agent(ua="Robustness Security") 
+# sets the user agent for hibp
 
 def load_common_passwords(filename): #loads list of common passwords
    with open(filename, 'r') as file:
@@ -22,11 +24,12 @@ dictionary_words = load_dictionary_words('words.txt')
 
 user_password = '' #sets initial password to empty
 
-password_visible = False
+password_visible = False #sets password visibility to false
 
 def open_main_window():  #the main window of the program
     global user_password
 
+    #cheks the length of the password
     def check_length(user_password, password_feedback_length, password_length_text, password_length_image):
         length_score = 0
         l = len(user_password)
@@ -50,7 +53,8 @@ def open_main_window():  #the main window of the program
                 password_length_image.image = 'icons/green circle.png'
 
         return length_score
-             
+
+    # checks for upper case letters    
     def check_case(user_password, password_case_feedback, password_case_text, password_case_image):
         upper_case_score = 0
         password_case_text.text = 'Uppercase:'
@@ -78,6 +82,7 @@ def open_main_window():  #the main window of the program
 
         return upper_case_score
 
+    #checks for special characters
     def check_special_char(user_password, password_special_char_feedback, password_special_char_text, password_special_character_image):
         special_char_score = 0
         password_special_char_text.text = 'Special Characters:'
@@ -104,6 +109,7 @@ def open_main_window():  #the main window of the program
 
         return special_char_score
         
+    #checks for common passwords or breached passwords
     def check_common_passwords(user_password, common_password_feedback, common_password_text, common_passwords):
         common_password_score = 0
         internet_connection = True
@@ -134,6 +140,7 @@ def open_main_window():  #the main window of the program
                 
         return common_password_score
 
+    #checks for numbers
     def check_numbers(user_password, password_number_feedback, password_number_text, password_number_image):
         numbers_score = 0
         password_number_text.text = 'Numbers:'
@@ -160,6 +167,7 @@ def open_main_window():  #the main window of the program
 
         return numbers_score
     
+    #checks to see if password is a dictionary word
     def check_dictionary_words(user_password, password_dictionary_word_text, password_dictionary_word_feedback, dictionary_words):
         dictionary_score = 0
         password_dictionary_word_text.text = 'Dictionary Word:'
@@ -176,42 +184,44 @@ def open_main_window():  #the main window of the program
             password_dictionary_word_feedback.text = ''
         
         return dictionary_score
-        
+    
+    # calculates the overall score   
     def overallscore(length_score, upper_case_score, special_char_score, numbers_score, common_passwords_score, dictionary_sore, overall_score_feedback, overall_score_text, user_password):
         overall_score_text.text = 'Overall Score:'
         if len(user_password) > 0:
             
-            x = length_score + upper_case_score + special_char_score + numbers_score + common_passwords_score + dictionary_sore
-            x = x/6
-            x = round(x)
+            overall_score = length_score + upper_case_score + special_char_score + numbers_score + common_passwords_score + dictionary_sore
+            overall_score = overall_score/6
+            overall_score = round(overall_score)
 
-            if x < 40:
-                y = 'Very Weak'
+            if overall_score < 40:
+                overall_score_word_feedback = 'Very Weak'
 
-            elif x < 50: 
-                y = 'Weak'
+            elif overall_score < 50: 
+                overall_score_word_feedback = 'Weak'
 
-            elif x < 60:
-                y = 'Moderate'
+            elif overall_score < 60:
+                overall_score_word_feedback = 'Moderate'
 
-            elif x < 70:
-                y = 'Almost Strong'
+            elif overall_score < 70:
+                overall_score_word_feedback = 'Almost Strong'
 
-            elif x < 80:
-                y = 'Strong'
+            elif overall_score < 80:
+                overall_score_word_feedback = 'Strong'
 
-            elif x < 100:
-                y = 'Very Strong'
+            elif overall_score < 100:
+                overall_score_word_feedback = 'Very Strong'
 
-            elif x == 100:
-                y = 'Impossibly Strong'
+            elif overall_score == 100:
+                overall_score_word_feedback = 'Impossibly Strong'
 
-            overall_score_feedback.text = f'{x}%        ({y})'
-            strength_bar.value = x
+            overall_score_feedback.text = f'{overall_score}%        ({overall_score_word_feedback})'
+            strength_bar.value = overall_score
         else:
             overall_score_feedback.text = 'Type a password :)'
             strength_bar.value = 0
 
+    # help window
     def help_btn(event):
         def back_btn(event):
             help_text.destroy()
@@ -263,6 +273,7 @@ def open_main_window():  #the main window of the program
         detailed_feedback.destroy()
         strength_bar.destroy()
         
+    # about window
     def abt_btn(event):
         def back_btn(event):
             about_text.destroy()
@@ -318,15 +329,18 @@ def open_main_window():  #the main window of the program
         app.add(back_button, 2, 1, align='center')
         app.add(about_text, 1, 1)
 
+    # resets the copy button icon
     def reset_copy_btn():
         copy_password_button.image = "icons/copy-alt.png"
 
+    # copies the users password
     def copy_btn(event):
         pyperclip.copy(user_password)
         copy_password_button.image = "icons/check.png"
         app.after(500, reset_copy_btn)
    
-    def password_anlysis():  
+    # analyses the password
+    def password_analysis():  
         global user_password
         user_password = input_password.text
         
@@ -341,6 +355,7 @@ def open_main_window():  #the main window of the program
 
         return user_password
 
+    # hides/ shows the users password
     def check_btn(event):
         global password_visible
         input_password.toggle()
@@ -352,10 +367,11 @@ def open_main_window():  #the main window of the program
             password_visible = False
             check.image = 'icons/eye.png'
             return password_visible
-                 
+
+    # everytime there is a change to a password analyse it            
     def on_password_change(event):
-        password_anlysis()
-       
+        password_analysis()
+    #detailed feedback window
     def feedback_btn(event):
         
         def back_btn(event):
@@ -428,7 +444,7 @@ def open_main_window():  #the main window of the program
     input_password.add_event_listener('change', on_password_change)
     password_prompt = gp.Label(app, 'Enter Password:')
    
-
+    # sets and adds different variables in the main window
     
     password_length_text = gp.Label(app, '')
     password_case_text = gp.Label(app, '')
@@ -469,9 +485,10 @@ def open_main_window():  #the main window of the program
     app.add(overall_score_feedback, 2, 2)
     app.add(detailed_feedback, 2, 3, align='center')
     
-    password_anlysis()
- 
-def start_button(event): #opens the main window
+    # initially analyses the password
+    password_analysis()
+#start up window button to main window
+def start_button(event):
     start_lbl.text = 'Loading Assets'
     thinking_pb.value = 0
 
@@ -482,6 +499,7 @@ def start_button(event): #opens the main window
 
     open_main_window()
 
+# startup window and app variables
 app = gp.GooeyPieApp('Robustness Security')
 app.width = 450
 app.height = 300
