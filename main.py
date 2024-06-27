@@ -34,7 +34,7 @@ def open_main_window():  #the main window of the program
         length_score = 0
         l = len(user_password)
         password_length_text.text = "Password Length:"
-        if len(user_password) == 0:
+        if len(user_password) == 0: # if the length is 0, ask the user to type a password
             password_feedback_length.text = "Type a password :)"
             password_length_image.image = 'icons/red circle.png'
         else:   
@@ -61,7 +61,7 @@ def open_main_window():  #the main window of the program
         
         if len(user_password) > 0:
         
-            for char in user_password:
+            for char in user_password: #adds 50 to the score for each upper case character
                 if char.isupper():
                     upper_case_score += 50
             
@@ -72,7 +72,7 @@ def open_main_window():  #the main window of the program
             elif upper_case_score == 50:
                 password_case_feedback.text = 'Moderate'
                 password_case_image.image = 'icons/yellow circle.png'
-            elif upper_case_score == 100 or upper_case_score > 100:
+            elif upper_case_score == 100 or upper_case_score > 100: #caps the score to 100
                 password_case_feedback.text = 'Strong'
                 upper_case_score = 100
                 password_case_image.image = 'icons/green circle.png'
@@ -86,6 +86,7 @@ def open_main_window():  #the main window of the program
     def check_special_char(user_password, password_special_char_feedback, password_special_char_text, password_special_character_image):
         special_char_score = 0
         password_special_char_text.text = 'Special Characters:'
+        
         if len(user_password) > 0: 
             symbols = "`~!@#$%^&*()_-+={[}]|\:;'<,>.?/}\\\""
             for char in user_password:
@@ -118,7 +119,7 @@ def open_main_window():  #the main window of the program
         except:
             internet_connection = False
 
-        if internet_connection == False:
+        if internet_connection == False: #if no internet connection use common password else use breached password
             common_password_text.text = 'Common Password:'
             if len(user_password) > 0:
                 if user_password in common_passwords:
@@ -173,7 +174,7 @@ def open_main_window():  #the main window of the program
         password_dictionary_word_text.text = 'Dictionary Word:'
         if len(user_password) > 0:
             password_dictionary_word_feedback.text = 'Yes'
-            if len(user_password) >= 4: 
+            if len(user_password) >= 4: #if length is less then 4, assume its a dictionary word
                 if user_password in dictionary_words:
                     dictionary_score = 0
                     password_dictionary_word_feedback.text = 'Yes'
